@@ -1,0 +1,14 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "java",
+      "name": "App",
+      "request": "launch",
+      "mainClass": "edu.vilniustech.hello.App",
+      "preLaunchTask": "Maven: compile",
+      "projectName": "hello-world",
+      "console": "integratedTerminal"
+    }
+  ]
+}
