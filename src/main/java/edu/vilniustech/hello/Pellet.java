@@ -13,11 +13,26 @@ public class Pellet {
         }
     }
 
-    public void eatAt(int row, int col) {
+    public boolean eatAt(int row, int col) {
         if (row < 0 || col < 0 || row >= remaining.length || col >= remaining[0].length) {
-            return;
+            return false;
+        }
+        if (!remaining[row][col]) {
+            return false;
         }
         remaining[row][col] = false;
+        return true;
+    }
+
+    public boolean isEmpty() {
+        for (boolean[] row : remaining) {
+            for (boolean hasPellet : row) {
+                if (hasPellet) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     public char symbolAt(int row, int col) {

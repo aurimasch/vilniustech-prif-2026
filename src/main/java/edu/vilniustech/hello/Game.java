@@ -12,6 +12,7 @@ public class Game {
     private final GameScene scene;
     private final GameRules rules;
     private final GameRenderer renderer;
+    private final Score score;
     private final Random random;
 
     public Game() {
@@ -24,13 +25,14 @@ public class Game {
         scene = new PacmanGameScene(map, pacman, ghosts);
         rules = new GameRules();
         renderer = new GameRenderer();
+        score = new Score();
         random = new Random();
     }
 
     public void run() {
         try (Scanner scanner = new Scanner(System.in)) {
             CommandReader input = new CommandReader(scanner);
-            renderer.render(scene);
+            renderer.render(scene, score);
             System.out.println("Move: W/A/S/D, quit: Q");
 
             while (true) {
@@ -44,7 +46,7 @@ public class Game {
                     break;
                 }
 
-                GameRules.MoveResult result = rules.movePacman(pacman, key, map, map.getPellets());
+                GameRules.MoveResult result = rules.movePacman(pacman, key, map, map.getPellets(), score);
                 if (result == GameRules.MoveResult.UNKNOWN_KEY) {
                     System.out.println("Unknown key. Use W/A/S/D or Q.");
                     continue;
@@ -53,8 +55,14 @@ public class Game {
                     continue;
                 }
 
+                if (rules.allPelletsEaten(map.getPellets())) {
+                    renderer.render(scene, score);
+                    System.out.println("YOU WIN! Score: " + score.getValue());
+                    break;
+                }
+
                 rules.moveGhosts(ghosts, map, random);
-                renderer.render(scene);
+                renderer.render(scene, score);
 
                 if (rules.isPacmanCaught(pacman, ghosts)) {
                     System.out.println("GAME OVER! Ghost caught Pac-Man.");

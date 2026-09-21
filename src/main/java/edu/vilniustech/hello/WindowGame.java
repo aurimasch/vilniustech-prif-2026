@@ -17,6 +17,7 @@ public class WindowGame {
     private final GameScene scene;
     private final GameRules rules;
     private final WindowGameRenderer renderer;
+    private final Score score;
     private final Random random;
 
     private JLabel status;
@@ -32,6 +33,7 @@ public class WindowGame {
         scene = new PacmanGameScene(map, pacman, ghosts);
         rules = new GameRules();
         renderer = new WindowGameRenderer();
+        score = new Score();
         random = new Random();
         running = true;
     }
@@ -41,7 +43,7 @@ public class WindowGame {
     }
 
     private void showWindow() {
-        status = new JLabel("Move: W/A/S/D, quit: Q", SwingConstants.CENTER);
+        status = new JLabel(playingStatus(), SwingConstants.CENTER);
 
         JFrame frame = new JFrame("Pac-Man");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -72,18 +74,30 @@ public class WindowGame {
             System.exit(0);
         }
 
-        GameRules.MoveResult result = rules.movePacman(pacman, key, map, map.getPellets());
+        GameRules.MoveResult result = rules.movePacman(pacman, key, map, map.getPellets(), score);
         if (result != GameRules.MoveResult.MOVED) {
+            return;
+        }
+
+        if (rules.allPelletsEaten(map.getPellets())) {
+            renderer.render(scene);
+            running = false;
+            status.setText("YOU WIN! Score: " + score.getValue());
             return;
         }
 
         rules.moveGhosts(ghosts, map, random);
         renderer.render(scene);
+        status.setText(playingStatus());
 
         if (rules.isPacmanCaught(pacman, ghosts)) {
             running = false;
             status.setText("GAME OVER! Ghost caught Pac-Man.");
         }
+    }
+
+    private String playingStatus() {
+        return "Score: " + score.getValue() + " | Move: W/A/S/D, quit: Q";
     }
 
     private static char toCommand(KeyEvent event) {

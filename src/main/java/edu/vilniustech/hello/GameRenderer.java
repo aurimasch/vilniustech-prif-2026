@@ -2,7 +2,7 @@ package edu.vilniustech.hello;
 
 public class GameRenderer {
 
-    public void render(GameScene scene) {
+    public void render(GameScene scene, Score score) {
         System.out.print("\033[H\033[2J");
         System.out.flush();
 
@@ -12,5 +12,6 @@ public class GameRenderer {
             }
             System.out.println();
         }
+        System.out.println("Score: " + score.getValue());
     }
 }

@@ -19,7 +19,7 @@ public class GameRules {
         return !map.isWall(row, col);
     }
 
-    public MoveResult movePacman(Pacman pacman, char key, Map map, Pellet pellets) {
+    public MoveResult movePacman(Pacman pacman, char key, Map map, Pellet pellets, Score score) {
         int nextRow = pacman.getRow();
         int nextCol = pacman.getCol();
 
@@ -37,11 +37,21 @@ public class GameRules {
             return MoveResult.BLOCKED;
         }
 
-        pellets.eatAt(pacman.getRow(), pacman.getCol());
+        eatPellet(pellets, score, pacman.getRow(), pacman.getCol());
         pacman.setPosition(nextRow, nextCol);
-        pellets.eatAt(pacman.getRow(), pacman.getCol());
+        eatPellet(pellets, score, pacman.getRow(), pacman.getCol());
 
         return MoveResult.MOVED;
+    }
+
+    public boolean allPelletsEaten(Pellet pellets) {
+        return pellets.isEmpty();
+    }
+
+    private void eatPellet(Pellet pellets, Score score, int row, int col) {
+        if (pellets.eatAt(row, col)) {
+            score.add(1);
+        }
     }
 
     public void moveGhosts(Ghost[] ghosts, Map map, Random random) {
