@@ -3,6 +3,13 @@
   "configurations": [
     {
       "type": "java",
+      "name": "WindowApp",
+      "request": "launch",
+      "mainClass": "edu.vilniustech.hello.WindowApp",
+      "projectName": "hello-world"
+    },
+    {
+      "type": "java",
       "name": "App",
       "request": "launch",
       "mainClass": "edu.vilniustech.hello.App",
